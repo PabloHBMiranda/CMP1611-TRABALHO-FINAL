@@ -47,5 +47,3 @@ Para fazer um dump do banco de dados PostgreSQL:
    - `seu_usuario` é o nome do usuário do PostgreSQL que você está usando para fazer o dump.
    - `nome_do_banco` é o nome do banco de dados que você deseja fazer o dump.
    - `dump.sql` é o arquivo onde o dump do banco de dados será salvo.
-
-Isso é tudo! Se precisar de mais alguma coisa, sinta-se à vontade para perguntar.
