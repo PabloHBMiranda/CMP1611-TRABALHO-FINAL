@@ -5,9 +5,9 @@ services:
     image: php:8.1-apache
     container_name: php-web
     ports:
-      - "8080:80"
+      - "2020:80"
     volumes:
-      - ./web:/var/www/html
+      - ./project:/var/www/html
     depends_on:
       - db
 
