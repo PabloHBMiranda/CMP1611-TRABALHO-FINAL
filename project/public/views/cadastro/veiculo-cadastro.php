@@ -37,9 +37,6 @@
 
 <?php
 
-// Uso da classe Singleton
-require_once '../../model/CMP1611_Veiculo.php';
-
 // Verifica se o formulário foi submetido
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
