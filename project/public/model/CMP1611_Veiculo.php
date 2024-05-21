@@ -13,6 +13,7 @@ class CMP1611_Veiculo
     private string $cor;
     private string $tipo_combus;
     private int $potencia_motor;
+    private int $cpf_proprietario;
     private CMP1611_Query $query;
 
     /**
@@ -24,6 +25,7 @@ class CMP1611_Veiculo
      * @param string $cor
      * @param string $tipo_combus
      * @param int $potencia_motor
+     * @param int $cpf_proprietario
      */
     public
     function __construct(
@@ -34,7 +36,8 @@ class CMP1611_Veiculo
         int    $capacidade = 0,
         string $cor = '',
         string $tipo_combus = '',
-        int    $potencia_motor = 0
+        int    $potencia_motor = 0,
+        int $cpf_proprietario = 0
     )
     {
         $this->placa = $placa;
@@ -45,6 +48,7 @@ class CMP1611_Veiculo
         $this->cor = $cor;
         $this->tipo_combus = $tipo_combus;
         $this->potencia_motor = $potencia_motor;
+        $this->cpf_proprietario = $cpf_proprietario;
 
         $this->query = CMP1611_Query::getInstance();
     }
@@ -130,6 +134,16 @@ class CMP1611_Veiculo
         $this->potencia_motor = $potencia_motor;
     }
 
+    public function getCpfProprietario(): int
+    {
+        return $this->cpf_proprietario;
+    }
+
+    public function setCpfProprietario(int $cpf_proprietario): void
+    {
+        $this->cpf_proprietario = $cpf_proprietario;
+    }
+
     public function getQuery(): CMP1611_Query
     {
         return $this->query;
@@ -162,6 +176,16 @@ class CMP1611_Veiculo
         }
 
         return $this->query->select_from_id('veiculo', 'placa', $placa);
+    }
+
+    public function checkOwner(string $cpf_proprietario = ''): bool
+    {
+
+        if (empty($cpf_proprietario)) {
+            $cpf_proprietario = $this->getCpfProprietario();
+        }
+
+        return $this->query->select_from_id('veiculo', 'proprietario_veiculo_fk', $cpf_proprietario);
     }
 
     public static function validate_settings(&$message = '', $settings): bool
@@ -217,6 +241,14 @@ class CMP1611_Veiculo
             return false;
         } else if ($settings['capacidade_pass'] < 0) {
             $message = 'Capacidade inválida';
+            return false;
+        }
+
+        if (empty($settings['proprietario_veiculo_fk'])) {
+            $message = 'CPF do propritário não informado';
+            return false;
+        } else if (!preg_match("/^\d{11}$/", $settings['proprietario_veiculo_fk'])) {
+            $message = 'CPF inválido. Deve conter 11 dígitos numéricos';
             return false;
         }
 

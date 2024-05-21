@@ -32,12 +32,14 @@
     <label for="engine_power">Potência do Motor:</label>
     <input type="number" id="engine_power" name="engine_power" required><br><br>
 
+    <label for="proprietary">CPF do Proprietário:</label>
+    <input type="number" id="proprietary" name="proprietary" required><br><br>
+
     <input type="submit" value="Inserir Veículo">
 </form>
 
 <?php
 
-// Uso da classe Singleton
 require_once '../../model/CMP1611_Veiculo.php';
 
 // Verifica se o formulário foi submetido
@@ -52,7 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'capacidade_pass' => $_POST['capacity'],
         'cor' => $_POST['color'],
         'tipo_combust' => $_POST['fuel_type'],
-        'potencia_motor' => $_POST['engine_power']
+        'potencia_motor' => $_POST['engine_power'],
+        'proprietario_veiculo_fk' => $_POST['proprietary']
     ];
 
     // Verifica se o tipo de combustível é válido
@@ -60,15 +63,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $veiculo = new CMP1611_Veiculo();
 
-        if (!$veiculo->checkPlateExistence($vehicleData['placa'])) {
-            if ($veiculo->insertVehicle($vehicleData)) {
-                $veiculo = $veiculo->selectVehicle($vehicleData['placa']);
-                echo "Veículo inserido com sucesso!";
+        if (!$veiculo->checkOwner($vehicleData['proprietario_veiculo_fk'])) {
+            if (!$veiculo->checkPlateExistence($vehicleData['placa'])) {
+                if ($veiculo->insertVehicle($vehicleData)) {
+                    $veiculo_dados = $veiculo->selectVehicle($vehicleData['placa']);
+                    echo "Veículo inserido com sucesso!";
+                } else {
+                    echo "Falha ao inserir veículo.<br>";
+                }
             } else {
-                echo "Falha ao inserir veículo.<br>";
+                echo "Placa {$vehicleData['placa']} já cadastrada!";
             }
-        } else {
-            echo "Placa já cadastrada!";
+        } else{
+            echo "Proprietário com CPF {$vehicleData['proprietario_veiculo_fk']} não cadastrado!";
         }
 
     } else {
