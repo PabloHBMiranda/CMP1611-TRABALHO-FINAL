@@ -214,5 +214,4 @@ class CMP1611_Motorista extends CMP1611_Pessoa
 
         return true;
     }
-
 }

@@ -1,5 +1,7 @@
 <?php
 
+require_once 'CMP1611_Veiculo.php';
+
 class CMP1611_Query{
     /**
      * @var null
@@ -117,5 +119,44 @@ class CMP1611_Query{
         $count = $stmt->fetchColumn();
         return $count > 0;
     }
+
+	public function selectPassageiro( int $cpf_pass_viag ) {
+		$sql = "SELECT * FROM $this->schema.passageiros WHERE cpf_passag = :cpf_passag";
+		$stmt = $this->conn->prepare($sql);
+		$stmt->bindParam(':cpf_passag', $cpf_pass_viag);
+		$stmt->execute();
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+	}
+
+	public function selectVeiculo(string $placa_veic_viag) {
+		$sql = "SELECT * FROM $this->schema.veiculo WHERE placa = :placav";
+		$stmt = $this->conn->prepare($sql);
+		$stmt->bindParam(':placav', $placa_veic_viag);
+		$stmt->execute();
+		$data = $stmt->fetch(PDO::FETCH_ASSOC);
+		if ($data) {
+			$veiculo = new CMP1611_Veiculo();
+
+			$veiculo->setPlaca($data['placa']);
+			$veiculo->setMarca($data['marca']);
+			$veiculo->setModelo($data['modelo']);
+			$veiculo->setAno($data['ano_fabric']);
+			$veiculo->setCapacidade($data['capacidade_pass']);
+			$veiculo->setCor($data['cor']);
+			$veiculo->setTipoCombus($data['tipo_combust']);
+			$veiculo->setPotenciaMotor($data['potencia_motor']);
+
+			return $veiculo;
+		}
+		return null;
+	}
+
+	public function selectMotorista( int $cpf_mot_viag ) {
+		$sql = "SELECT * FROM $this->schema.motoristas WHERE cpf_motorista = :cpf_motorista";
+		$stmt = $this->conn->prepare($sql);
+		$stmt->bindParam(':cpf_motorista', $cpf_mot_viag);
+		$stmt->execute();
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+	}
 
 }
