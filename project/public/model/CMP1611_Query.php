@@ -115,7 +115,7 @@ class CMP1611_Query{
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         $count = $stmt->fetchColumn();
-        return $count == 0;
+        return $count > 0;
     }
 
 }

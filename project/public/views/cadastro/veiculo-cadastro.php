@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $veiculo = new CMP1611_Veiculo();
 
-        if ($veiculo->checkPlateExistence($vehicleData['placa'])) {
+        if (!$veiculo->checkPlateExistence($vehicleData['placa'])) {
             if ($veiculo->insertVehicle($vehicleData)) {
                 $veiculo = $veiculo->selectVehicle($vehicleData['placa']);
                 echo "Veículo inserido com sucesso!";
