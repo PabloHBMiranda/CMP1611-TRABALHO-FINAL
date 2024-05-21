@@ -37,15 +37,11 @@
 
 <?php
 
+// Uso da classe Singleton
+require_once '../../model/CMP1611_Veiculo.php';
+
 // Verifica se o formulário foi submetido
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Função para validar o tipo de combustível
-    function validarTipoCombustivel($tipo_combustivel) {
-        // Lista de valores permitidos
-        $valores_permitidos = array('G', 'A', 'D', 'F');
-        // Verifica se o tipo de combustível está na lista de valores permitidos
-        return in_array($tipo_combustivel, $valores_permitidos);
-    }
 
     // Obtém os dados do formulário
     $vehicleData = [
@@ -60,30 +56,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ];
 
     // Verifica se o tipo de combustível é válido
-    if (validarTipoCombustivel($vehicleData['tipo_combust'])) {
-        // Uso da classe Singleton
-        require_once '../../model/CMP1611_Query.php';
-        $query = CMP1611_Query::getInstance();
+    if (CMP1611_Veiculo::validate_settings($message, $vehicleData)) {
 
-        if($query->checkIfIdExists('veiculo', 'placa', $vehicleData['placa'])) {
-            // Inserindo o veículo
-            $inserted = $query->insert('veiculo', $vehicleData);
-            if ($inserted) {
-                $veiculo = $query->select_from_id('veiculo', 'placa', $_POST['plate']);
-                echo "\n";
-                print_r($veiculo);
-                echo "\n";
-                exit();
+        $veiculo = new CMP1611_Veiculo();
+
+        if ($veiculo->checkPlateExistence($vehicleData['placa'])) {
+            if ($veiculo->insertVehicle($vehicleData)) {
+                $veiculo = $veiculo->selectVehicle($vehicleData['placa']);
                 echo "Veículo inserido com sucesso!";
             } else {
                 echo "Falha ao inserir veículo.<br>";
             }
-        } else{
+        } else {
             echo "Placa já cadastrada!";
         }
 
     } else {
-        echo "Tipo de combustível inválido. Por favor, insira um tipo de combustível válido (G, A, D ou F).";
+        echo $message;
     }
 }
 
