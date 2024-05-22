@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e3a1a75-94e2-4e7b-b72c-d54ac9fdc4a3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/project/public/model/CMP1611_Query.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/model/CMP1611_Query.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/public/views/cadastro/motorista-cadastro.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/views/cadastro/motorista-cadastro.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,7 +143,7 @@
       <workItem from="1716243803458" duration="12050000" />
       <workItem from="1716256540339" duration="72000" />
       <workItem from="1716256628085" duration="4855000" />
-      <workItem from="1716335849707" duration="4381000" />
+      <workItem from="1716335849707" duration="5422000" />
     </task>
     <servers />
   </component>

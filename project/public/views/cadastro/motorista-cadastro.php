@@ -7,6 +7,14 @@
 </head>
 <body>
 <h1>Cadastro de Motorista</h1>
+
+<?php
+// Exibir mensagem de sucesso ou erro
+if (isset($_GET['message'])) {
+    echo "<p style='font-weight: bold'>{$_GET['message']}</p>";
+}
+?>
+
 <form action="motorista-cadastro.php" method="post">
     <label for="cpf">CPF:</label>
     <input type="text" id="cpf" name="cpf" required><br><br>
@@ -75,15 +83,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!$motorista->checkMotoristaExistence($motoristaData['cpf_motorista'])
             && !$motorista->checkPessoaExistence($pessoaData['cpf_pessoa'])) {
             if ($motorista->insertMotorista($motoristaData) && $motorista->insertPessoa($pessoaData)) {
-                $motorista_dados = $motorista->selectMotorista($motoristaData['cpf_motorista']);
-                echo "Motorista inserido com sucesso!";
+                $message = "Motorista {$motoristaData['nome']} com CPF {$motoristaData['cpf_motorista']} cadastrado com sucesso!";
             } else {
-                echo "Falha ao inserir motorista.<br>";
+                $message = "Falha ao inserir motorista.<br>";
             }
         } else {
-            echo "Motorista com CPF {$motoristaData['cpf_motorista']} já cadastrado!";
+            $message = "Motorista com CPF {$motoristaData['cpf_motorista']} já cadastrado!";
         }
-    } else {
-        echo $message;
     }
-}
+
+    if ($message) {
+        header("Location: motorista-cadastro.php?message=" . urlencode($message));
+        exit();
+    }
+} ?>
+
+<script>
+    // Remove o parâmetro da URL após a mensagem ser exibida
+    if (window.location.search.includes('message=')) {
+        const url = new URL(window.location);
+        url.searchParams.delete('message');
+        window.history.replaceState({}, document.title, url);
+    }
+</script>
