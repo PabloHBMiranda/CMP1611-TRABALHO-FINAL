@@ -8,7 +8,7 @@ class CMP1611_Query{
     /**
      * @var null
      */
-    private static ?CMP1611_Query $instance;
+    private static ?self $instance = null;
     private ?PDO $conn;
 
     private string $host;
@@ -172,7 +172,7 @@ class CMP1611_Query{
     /**
      * @throws Exception
      */
-    public function loadEnv()
+    public function loadEnv(): void
     {
         $envPath = ROOT_DIR . '/.env' ; // Substitua pelo caminho correto para o seu arquivo .env
         if (!file_exists($envPath)) {

@@ -5,8 +5,6 @@ require_once 'CMP1611_Pessoa.php';
 
 class CMP1611_Motorista extends CMP1611_Pessoa
 {
-
-    private CMP1611_Query $query;
     private int $cpf_mot;
     private string $cnh;
     private int $conta_mot;
@@ -16,12 +14,14 @@ class CMP1611_Motorista extends CMP1611_Pessoa
     /**
      * @param int $cpf_mot
      * @param string $cnh
-     * @param int $telefone_mot
-     * @param string $nome_mot
-     * @param string $endereco_mot
      * @param int $conta_mot
      * @param int $banco_mot
      * @param int $agencia_mot
+     * @param int $telefone_mot
+     * @param string $nome_mot
+     * @param string $endereco_mot
+     * @param string $email
+     * @param string $sexo
      */
     public
     function __construct(
@@ -44,8 +44,6 @@ class CMP1611_Motorista extends CMP1611_Pessoa
         $this->conta_mot = $conta_mot;
         $this->banco_mot = $banco_mot;
         $this->agencia_mot = $agencia_mot;
-
-        $this->query = CMP1611_Query::getInstance();
     }
 
 
@@ -77,36 +75,6 @@ class CMP1611_Motorista extends CMP1611_Pessoa
     public function setCnh(string $cnh): void
     {
         $this->cnh = $cnh;
-    }
-
-    public function getTelefoneMot(): int
-    {
-        return $this->telefone_mot;
-    }
-
-    public function setTelefoneMot(int $telefone_mot): void
-    {
-        $this->telefone_mot = $telefone_mot;
-    }
-
-    public function getNomeMot(): string
-    {
-        return $this->nome_mot;
-    }
-
-    public function setNomeMot(string $nome_mot): void
-    {
-        $this->nome_mot = $nome_mot;
-    }
-
-    public function getEnderecoMot(): string
-    {
-        return $this->endereco_mot;
-    }
-
-    public function setEnderecoMot(string $endereco_mot): void
-    {
-        $this->endereco_mot = $endereco_mot;
     }
 
     public function getContaMot(): int

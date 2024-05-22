@@ -10,7 +10,7 @@ class CMP1611_Pessoa
     protected int $telefone;
     protected string $sexo;
     protected string $email;
-    private ?CMP1611_Query $query;
+    protected ?CMP1611_Query $query;
 
     public function
     __construct(
@@ -21,13 +21,13 @@ class CMP1611_Pessoa
         string $sexo = '',
         string $email = ''
     ) {
+        $this->query = CMP1611_Query::getInstance();
         $this->cpf_pessoa = $cpf_pessoa;
         $this->nome = $nome;
         $this->endereco = $endereco;
         $this->telefone = $telefone;
         $this->sexo = $sexo;
         $this->email = $email;
-        $this->query = CMP1611_Query::getInstance();
     }
 
     // getters e setters para os atributos acima
