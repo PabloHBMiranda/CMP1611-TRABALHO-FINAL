@@ -169,11 +169,14 @@ class CMP1611_Query{
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
+    /**
+     * @throws Exception
+     */
     public function loadEnv()
     {
         $envPath = ROOT_DIR . '/.env' ; // Substitua pelo caminho correto para o seu arquivo .env
         if (!file_exists($envPath)) {
-            throw new Exception('.env file does not exist');
+            throw new Exception('O arquivo .env não existe na raiz do projeto [ ' . ROOT_DIR . ' ].');
         }
         $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         foreach ($lines as $line) {
