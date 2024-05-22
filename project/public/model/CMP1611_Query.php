@@ -1,24 +1,34 @@
 <?php
 
 require_once 'CMP1611_Veiculo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/CMP1611-TRABALHO-FINAL/constants.php';
+
 
 class CMP1611_Query{
     /**
      * @var null
      */
-    private static $instance;
-    private $conn;
+    private static ?CMP1611_Query $instance;
+    private ?PDO $conn;
 
-    private $host = 'localhost';
-    private $dbname = 'cmp1611_pablo_vinicius_tales_renato';
-    private $user = 'postgres';
+    private string $host;
+    private string $dbname;
+    private string $user;
 
-    private $schema = 'cmp1611_trabalho_final';
-    private $password = '123';
+    private string $schema;
+    private string $password;
 
     // Construtor privado para impedir a criação direta de instâncias
     private function __construct()
     {
+        $this->loadEnv();
+
+        $this->host = $_ENV['DB_HOST'];
+        $this->dbname = $_ENV['DB_NAME'];
+        $this->user = $_ENV['DB_USER'];
+        $this->schema = $_ENV['DB_SCHEMA'];
+        $this->password = $_ENV['DB_PASSWORD'];
+
         $this->conn = null;
 
         try {
@@ -159,4 +169,18 @@ class CMP1611_Query{
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
+    public function loadEnv()
+    {
+        $envPath = ROOT_DIR . '/.env' ; // Substitua pelo caminho correto para o seu arquivo .env
+        if (!file_exists($envPath)) {
+            throw new Exception('.env file does not exist');
+        }
+        $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            if (str_contains($line, '=')) {
+                list($name, $value) = explode('=', $line, 2);
+                $_ENV[$name] = $value;
+            }
+        }
+    }
 }

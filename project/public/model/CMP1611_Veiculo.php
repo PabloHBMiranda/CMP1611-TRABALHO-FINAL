@@ -188,7 +188,7 @@ class CMP1611_Veiculo
         return $this->query->select_from_id('veiculo', 'proprietario_veiculo_fk', $cpf_proprietario);
     }
 
-    public static function validate_settings(&$message = '', $settings): bool
+    public static function validate_settings(&$message, $settings): bool
     {
         if (strlen($settings['placa']) != 7) {
             if (strlen($settings['placa']) < 7) {
