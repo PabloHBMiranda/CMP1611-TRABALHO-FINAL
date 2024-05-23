@@ -185,7 +185,7 @@ class CMP1611_Veiculo
             $cpf_proprietario = $this->getCpfProprietario();
         }
 
-        return $this->query->select_from_id('veiculo', 'proprietario_veiculo_fk', $cpf_proprietario);
+        return $this->query->checkIfIdExists('veiculo', 'veiculo_proprietarios__fk', $cpf_proprietario);
     }
 
     public static function validate_settings(&$message, $settings): bool
@@ -244,10 +244,10 @@ class CMP1611_Veiculo
             return false;
         }
 
-        if (empty($settings['proprietario_veiculo_fk'])) {
+        if (empty($settings['veiculo_proprietarios__fk'])) {
             $message = 'CPF do propritário não informado';
             return false;
-        } else if (!preg_match("/^\d{11}$/", $settings['proprietario_veiculo_fk'])) {
+        } else if (!preg_match("/^\d{11}$/", $settings['veiculo_proprietarios__fk'])) {
             $message = 'CPF inválido. Deve conter 11 dígitos numéricos';
             return false;
         }

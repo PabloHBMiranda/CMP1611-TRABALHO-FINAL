@@ -61,6 +61,9 @@ class CMP1611_Query{
             return true;
         } catch (PDOException $e) {
             echo "Insert error: " . $e->getMessage();
+            echo " SQL: " . $sql;
+            print_r($data); // Opcional: exibe os dados para verificar o conteúdo
+            return false;
         }
     }
 
@@ -168,6 +171,14 @@ class CMP1611_Query{
 		$stmt->execute();
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
+
+    public function     selectVeiculoPlaca( string $placa_veic ) {
+        $sql = "SELECT * FROM $this->schema.veiculo WHERE placa = :placa_veic";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':placa_veic', $placa_veic);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
     /**
      * @throws Exception
