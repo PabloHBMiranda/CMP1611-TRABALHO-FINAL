@@ -5,7 +5,6 @@ require_once 'CMP1611_Pessoa.php';
 
 class CMP1611_Motorista extends CMP1611_Pessoa
 {
-    private int $cpf_mot;
     private string $cnh;
     private int $conta_mot;
     private int $banco_mot;
@@ -25,21 +24,20 @@ class CMP1611_Motorista extends CMP1611_Pessoa
      */
     public
     function __construct(
-        int    $cpf_mot = 0,
         string $cnh = '',
         int    $conta_mot = 0,
         int    $banco_mot = 0,
         int    $agencia_mot = 0,
         int    $telefone_mot = 0,
+        int $cpf = 0,
         string $nome_mot = '',
         string $endereco_mot = '',
         string $email = '',
         string $sexo = ''
     )
     {
-        parent::__construct($cpf_mot, $nome_mot, $endereco_mot, $telefone_mot, $email, $sexo);
+        parent::__construct($cpf, $nome_mot, $endereco_mot, $telefone_mot, $email, $sexo);
 
-        $this->cpf_mot = $cpf_mot;
         $this->cnh = $cnh;
         $this->conta_mot = $conta_mot;
         $this->banco_mot = $banco_mot;
@@ -55,16 +53,6 @@ class CMP1611_Motorista extends CMP1611_Pessoa
     public function setQuery(CMP1611_Query $query): void
     {
         $this->query = $query;
-    }
-
-    public function getCpfMot(): int
-    {
-        return $this->cpf_mot;
-    }
-
-    public function setCpfMot(int $cpf_mot): void
-    {
-        $this->cpf_mot = $cpf_mot;
     }
 
     public function getCnh(): string
@@ -111,13 +99,13 @@ class CMP1611_Motorista extends CMP1611_Pessoa
     {
 
         if (empty($cpf_mot)) {
-            $cpf_mot = $this->getCpfMot();
+            $cpf_mot = $this->getCpfPessoa();
         }
 
         return $this->query->checkIfIdExists('motoristas', 'cpf_motorista', $cpf_mot);
     }
 
-    public function insertMotorista(array $motoristaData)
+    public function insertMotorista(array $motoristaData): ?bool
     {
         return $this->query->insert('motoristas', $motoristaData);
     }
@@ -125,7 +113,7 @@ class CMP1611_Motorista extends CMP1611_Pessoa
     public function selectMotorista(string $cpf_mot)
     {
         if (empty($cpf_mot)) {
-            $cpf_mot = $this->getCpfMot();
+            $cpf_mot = $this->getCpfPessoa();
         }
 
         $pessoaData = $this->selectPessoa($cpf_mot);

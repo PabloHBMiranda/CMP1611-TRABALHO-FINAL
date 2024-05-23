@@ -49,8 +49,6 @@ if (isset($_GET['message'])) {
 
     <input type="submit" value="Cadastrar Motorista">
 </form>
-</body>
-</html>
 
 <?php
 
@@ -106,3 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         window.history.replaceState({}, document.title, url);
     }
 </script>
+
+</body>
+</html>

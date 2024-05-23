@@ -7,6 +7,14 @@
 </head>
 <body>
 <h1>Inserir Veículo</h1>
+
+<?php
+// Exibir mensagem de sucesso ou erro
+if (isset($_GET['message'])) {
+    echo "<p style='font-weight: bold'>{$_GET['message']}</p>";
+}
+?>
+
 <form action="veiculo-cadastro.php" method="post">
     <label for="plate">Placa:</label>
     <input type="text" id="plate" name="plate" required><br><br>
@@ -67,22 +75,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (!$veiculo->checkPlateExistence($vehicleData['placa'])) {
                 if ($veiculo->insertVehicle($vehicleData)) {
                     $veiculo_dados = $veiculo->selectVehicle($vehicleData['placa']);
-                    echo "Veículo inserido com sucesso!";
+                    $message = "Veículo com placa {$vehicleData['data']} inserido com sucesso!";
                 } else {
-                    echo "Falha ao inserir veículo.<br>";
+                    $message = "Falha ao inserir veículo.<br>";
                 }
             } else {
-                echo "Placa {$vehicleData['placa']} já cadastrada!";
+                $message = "Placa {$vehicleData['placa']} já cadastrada!";
             }
         } else{
-            echo "Proprietário com CPF {$vehicleData['proprietario_veiculo_fk']} não cadastrado!";
+            $message = "Proprietário com CPF {$vehicleData['proprietario_veiculo_fk']} não cadastrado!";
         }
 
     } else {
         echo $message;
     }
+
+    if ($message) {
+        header("Location: veiculo-cadastro.php?message=" . urlencode($message));
+        exit();
+    }
 }
 
 ?>
+
+<script>
+    // Remove o parâmetro da URL após a mensagem ser exibida
+    if (window.location.search.includes('message=')) {
+        const url = new URL(window.location);
+        url.searchParams.delete('message');
+        window.history.replaceState({}, document.title, url);
+    }
+</script>
+
 </body>
 </html>
