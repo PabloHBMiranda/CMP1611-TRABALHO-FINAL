@@ -55,6 +55,8 @@ if (isset($_GET['message'])) {
 require_once '../../model/CMP1611_Motorista.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $motorista = new CMP1611_Motorista();
     // Obtém os dados do formulário
     $motoristaData = [
         'cpf_motorista' => $_POST['cpf'],
@@ -74,19 +76,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ];
 
     $message = '';
-    if (CMP1611_Motorista::validate_settings($message, $motoristaData, $pessoaData)) {
-
-        $motorista = new CMP1611_Motorista();
-
-        if (!$motorista->checkMotoristaExistence($motoristaData['cpf_motorista'], $motoristaData['cnh'])
-            && !$motorista->checkPessoaExistence($pessoaData['cpf_pessoa'])) {
-            if ($motorista->insertMotorista($motoristaData) && $motorista->insertPessoa($pessoaData)) {
-                $message = "Motorista {$motoristaData['nome']} com CPF {$motoristaData['cpf_motorista']} cadastrado com sucesso!";
-            } else {
-                $message = "Falha ao inserir motorista.<br>";
-            }
+    if ($motorista->validate_settings($message, $motoristaData, $pessoaData)) {
+        if ($motorista->insertMotorista($motoristaData) && $motorista->insertPessoa($pessoaData)) {
+            $message = "Motorista {$motoristaData['nome']} com CPF {$motoristaData['cpf_motorista']} cadastrado com sucesso!";
         } else {
-            $message = "Motorista já cadastrado!";
+            $message = "Falha ao inserir motorista.<br>";
         }
     }
 

@@ -54,6 +54,8 @@ if (isset($_GET['message'])) {
 require_once '../../model/CMP1611_Proprietario.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $proprietario = new CMP1611_Proprietario();
     // Obtém os dados do formulário
     $proprietarioData = [
         'cpf_prop' => $_POST['cpf'],
@@ -73,20 +75,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ];
 
     $message = '';
-    if (CMP1611_Proprietario::validate_settings($message, $proprietarioData, $pessoaData)) {
+    if ($proprietario->validate_settings($message, $proprietarioData, $pessoaData)) {
 
-        $proprietario = new CMP1611_Proprietario();
-
-        if (!$proprietario->checkProprietarioExistence($proprietarioData['cpf_prop'], $proprietarioData['cnh_prop'])
-            && !$proprietario->checkPessoaExistence($pessoaData['cpf_pessoa'])) {
-            if ($proprietario->insertProprietario($proprietarioData) && $proprietario->insertPessoa($pessoaData)) {
-                $message = "Proprietário {$proprietarioData['nome']} com CPF {$proprietarioData['cpf_prop']} cadastrado com sucesso!";
-            } else {
-                $message = "Falha ao inserir proprietário.<br>";
-            }
+        if ($proprietario->insertProprietario($proprietarioData) && $proprietario->insertPessoa($pessoaData)) {
+            $message = "Proprietário {$proprietarioData['nome']} com CPF {$proprietarioData['cpf_prop']} cadastrado com sucesso!";
         } else {
-            $message = "Proprietário já cadastrado!";
+            $message = "Falha ao inserir proprietário.<br>";
         }
+
     }
 
     if ($message) {

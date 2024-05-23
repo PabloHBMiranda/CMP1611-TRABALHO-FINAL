@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e3a1a75-94e2-4e7b-b72c-d54ac9fdc4a3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/project/public/views/cadastro/proprietario-cadastro.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/public/model/CMP1611_Motorista.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/model/CMP1611_Motorista.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/public/model/CMP1611_Proprietario.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/model/CMP1611_Proprietario.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/public/views/cadastro/motorista-cadastro.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/views/cadastro/motorista-cadastro.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/public/views/cadastro/proprietario-cadastro.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/views/cadastro/proprietario-cadastro.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,7 +148,7 @@
       <workItem from="1716256628085" duration="4855000" />
       <workItem from="1716335849707" duration="6474000" />
       <workItem from="1716426577444" duration="1356000" />
-      <workItem from="1716428056780" duration="1064000" />
+      <workItem from="1716428056780" duration="2598000" />
     </task>
     <servers />
   </component>

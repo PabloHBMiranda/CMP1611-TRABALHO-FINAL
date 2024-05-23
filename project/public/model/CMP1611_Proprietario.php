@@ -95,17 +95,13 @@ class CMP1611_Proprietario extends CMP1611_Pessoa
         $this->agencia_prop = $agencia_prop;
     }
 
-    public function checkProprietarioExistence(string $cpf_proprietario, string $cnh_prop): bool
+    public function checkProprietarioExistence( string $cnh_prop): bool
     {
-        if (empty($cpf_proprietario)) {
-            $cpf_proprietario = $this->getCpfProp();
-        }
-
         if(empty($cnh_prop)){
             $cnh_prop = $this->getCnhProp();
         }
 
-        return $this->query->checkIfIdExists('proprietarios', 'cpf_prop', $cpf_proprietario) && $this->query->checkIfIdExists('motoristas', 'cnh_prop', $cnh_prop);
+        return $this->query->checkIfIdExists('proprietarios', 'cnh_prop', $cnh_prop);
     }
 
     public function insertProprietario(array $proprietarioData)
@@ -125,7 +121,7 @@ class CMP1611_Proprietario extends CMP1611_Pessoa
         return array_merge($this->query->select_from_id('proprietarios', 'cpf_prop', $cpf_proprietario), $pessoaData);
     }
 
-    public static function validate_settings(&$message, $settings, $settings_pessoa): bool
+    public function validate_settings(&$message, $settings, $settings_pessoa): bool
     {
         if (empty($settings['cpf_prop'])) {
             $message = 'CPF não informado';
@@ -168,6 +164,16 @@ class CMP1611_Proprietario extends CMP1611_Pessoa
         }
 
         if (!CMP1611_Pessoa::validatePessoaData($message, $settings_pessoa)) {
+            return false;
+        }
+
+        if($this->checkPessoaExistence($settings_pessoa['cpf_pessoa'])){
+            $message = 'Pessoa já cadastrada';
+            return false;
+        }
+
+        if($this->checkProprietarioExistence($settings['cnh_prop'])){
+            $message = 'Proprietário já cadastrada';
             return false;
         }
 
