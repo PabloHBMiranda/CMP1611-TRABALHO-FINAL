@@ -1,0 +1,13 @@
+table, th, td {
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+td, th  {
+    padding: 8px 12px;
+    text-align: left;
+}
+
+td > a:not(:last-child), th > a:not(:last-child) {
+    margin-right: 10px;
+}
