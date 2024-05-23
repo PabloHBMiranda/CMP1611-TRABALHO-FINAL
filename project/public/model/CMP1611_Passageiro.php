@@ -105,6 +105,10 @@ class CMP1611_Passageiro extends CMP1611_Pessoa
             }
         }
 
+        if(!$this->checkPassageiroExistence()){
+            return false;
+        }
+
         return true;
     }
 
@@ -181,6 +185,8 @@ class CMP1611_Passageiro extends CMP1611_Pessoa
                 return false;
             }
         }
+
+        $this->validate_settings_pessoa($message);
 
         return true;
     }
