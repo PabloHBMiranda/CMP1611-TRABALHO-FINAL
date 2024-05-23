@@ -100,7 +100,7 @@ class CMP1611_Proprietario extends CMP1611_Pessoa
         return $this->query->checkIfIdExists('proprietarios', 'cnh_prop', $cnh_prop);
     }
 
-    public function insertProprietario()
+    public function insertProprietario(): ?bool
     {
         $proprietarioData = [
             'cpf_prop' => $this->cpf,
@@ -110,7 +110,12 @@ class CMP1611_Proprietario extends CMP1611_Pessoa
             'conta_prop' => $this->conta_prop
         ];
 
-        return $this->query->insert('proprietarios', $proprietarioData);
+        if ($this->insertPessoa()) {
+            if ($this->query->insert('proprietarios', $proprietarioData)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function validateCpfProprietario(): bool

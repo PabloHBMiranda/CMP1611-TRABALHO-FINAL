@@ -102,7 +102,7 @@ class CMP1611_Query{
         }
     }
 
-    public function update($table, $data, $id)
+    public function update($table, $id_name, $id, $data)
     {
         try {
             $fields = '';
@@ -110,7 +110,7 @@ class CMP1611_Query{
                 $fields .= "$key = :$key, ";
             }
             $fields = rtrim($fields, ', ');
-            $sql = "UPDATE $this->schema.$table SET $fields WHERE id = :id";
+            $sql = "UPDATE $this->schema.$table SET $fields WHERE $id_name = :id";
             $stmt = $this->conn->prepare($sql);
             foreach ($data as $key => &$value) {
                 $stmt->bindParam(':' . $key, $value);

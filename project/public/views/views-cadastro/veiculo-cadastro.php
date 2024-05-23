@@ -66,29 +66,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'veiculo_proprietarios__fk' => $_POST['proprietary']
     ];
 
-    // Verifica se o tipo de combustível é válido
-    if (CMP1611_Veiculo::validate_settings($message, $vehicleData)) {
+    $veiculo = new CMP1611_Veiculo(
+        'placa',
+        'marca',
+        'modelo',
+        'ano_fabric',
+        'capacidade_pass',
+        'cor',
+        'tipo_combust',
+        'potencia_motor',
+        'veiculo_proprietarios__fk');
 
-        $veiculo = new CMP1611_Veiculo();
-
-        if (!$veiculo->checkOwner($vehicleData['veiculo_proprietarios__fk'])) {
-            if (!$veiculo->checkPlateExistence($vehicleData['placa'])) {
-                if ($veiculo->insertVehicle($vehicleData)) {
-                    $veiculo_dados = $veiculo->selectVehicle($vehicleData['placa']);
-                    $message = "Veículo com placa {$vehicleData['placa']} inserido com sucesso!";
-                } else {
-                    $message = "Falha ao inserir veículo.<br>";
-                }
-            } else {
-                $message = "Placa {$vehicleData['placa']} já cadastrada!";
-            }
-        } else{
-            $message = "Proprietário com CPF {$vehicleData['veiculo_proprietarios__fk']} não cadastrado!";
+    $message = '';
+    if ($veiculo->validate_settings($message)) {
+        if ($veiculo->insertVehicle()) {
+            $message = "Veículo com placa {$vehicleData['placa']} inserido com sucesso!";
+        } else {
+            $message = "Falha ao inserir veículo.<br>";
         }
-
-    } else {
-        echo $message;
     }
+
 
     if ($message) {
         header("Location: veiculo-cadastro.php?message=" . urlencode($message));

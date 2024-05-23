@@ -29,15 +29,15 @@ class CMP1611_Veiculo
      */
     public
     function __construct(
-        string $placa = '',
-        string $marca = '',
-        string $modelo = '',
-        int    $ano = 0,
-        int    $capacidade = 0,
-        string $cor = '',
-        string $tipo_combus = '',
-        int    $potencia_motor = 0,
-        int $cpf_proprietario = 0
+        string $placa,
+        string $marca,
+        string $modelo,
+        int    $ano,
+        int    $capacidade,
+        string $cor,
+        string $tipo_combus,
+        int    $potencia_motor,
+        int    $cpf_proprietario
     )
     {
         $this->placa = $placa;
@@ -154,102 +154,137 @@ class CMP1611_Veiculo
         $this->query = $query;
     }
 
-    public function checkPlateExistence(string $placa = ''): bool
+    public function checkPlateExistence(): bool
     {
-        if (empty($placa)) {
-            $placa = $this->getPlaca();
-        }
+        $placa = $this->placa;
 
         return $this->query->checkIfIdExists('veiculo', 'placa', $placa);
     }
 
-    public function insertVehicle(array $vehicleData): bool
+    public function insertVehicle(): bool
     {
+        $vehicleData = [
+            'placa' => $this->placa,
+            'marca' => $this->marca,
+            'modelo' => $this->modelo,
+            'ano' => $this->ano,
+            'capacidade' => $this->capacidade,
+            'cor' => $this->cor,
+            'tipo_combus' => $this->tipo_combus,
+            'potencia_motor' => $this->potencia_motor,
+            'veiculo_proprietarios__fk' => $this->cpf_proprietario
+        ];
+
         return $this->query->insert('veiculo', $vehicleData);
     }
 
-    public function selectVehicle(string $placa = '')
+    public function selectVehicle()
     {
 
-        if (empty($placa)) {
-            $placa = $this->getPlaca();
-        }
+        $placa = $this->placa;
+
 
         return $this->query->select_from_id('veiculo', 'placa', $placa);
     }
 
-    public function checkOwner(string $cpf_proprietario = ''): bool
+    public function checkPropietarioVeiculo(): bool
     {
-
-        if (empty($cpf_proprietario)) {
-            $cpf_proprietario = $this->getCpfProprietario();
-        }
+        $cpf_proprietario = $this->cpf_proprietario;
 
         return $this->query->checkIfIdExists('veiculo', 'veiculo_proprietarios__fk', $cpf_proprietario);
     }
 
-    public static function validate_settings(&$message, $settings): bool
+    public function validatePlaca(): bool
     {
-        if (strlen($settings['placa']) != 7) {
-            if (strlen($settings['placa']) < 7) {
-                $message = 'Placa com menos de 7 caracteres';
-            } else {
-                $message = 'Placa com mais de 7 caracteres';
+        // Verificar se a placa é válida
+        if (!preg_match("/^[A-Z]{3}-[0-9]{4}$/", $this->placa)) {
+            return false;
+        }
+
+        if ($this->checkPlateExistence()) {
+            return false;
+        }
+
+        return true;
+
+    }
+
+    public function validateMarca(): bool
+    {
+        // Verificar se a marca é válida
+        return !empty($this->marca);
+    }
+
+    public function validateModelo(): bool
+    {
+        // Verificar se o modelo é válido
+        return !empty($this->modelo);
+    }
+
+    public function validateAno(): bool
+    {
+        // Verificar se o ano é válido
+        return preg_match("/^[0-9]{4}$/", $this->ano);
+    }
+
+    public function validateCapacidade(): bool
+    {
+        // Verificar se a capacidade é válida
+        return $this->capacidade > 0;
+    }
+
+    public function validateCor(): bool
+    {
+        // Verificar se a cor é válida
+        return !empty($this->cor);
+    }
+
+    public function validateTipoCombus(): bool
+    {
+        // Verificar se o tipo de combustível é válido
+        return in_array($this->tipo_combus, ['G', 'A', 'D', 'F']);
+    }
+
+    public function validatePotenciaMotor(): bool
+    {
+        // Verificar se a potência do motor é válida
+        return $this->potencia_motor > 0;
+    }
+
+    public function validateCpfProprietario(): bool
+    {
+        // Verificar se o CPF do proprietário é válido
+        if (!preg_match("/^[0-9]{11}$/", $this->cpf_proprietario)) {
+            return false;
+        }
+
+        if ($this->checkPropietarioVeiculo()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function validate_settings(string &$message): bool
+    {
+        // Verificar se todos os dados são válidos
+        $validations = [
+            'validatePlaca' => 'Erro de validação: Placa inválida.',
+            'validateMarca' => 'Erro de validação: Marca inválida.',
+            'validateModelo' => 'Erro de validação: Modelo inválido.',
+            'validateAno' => 'Erro de validação: Ano inválido.',
+            'validateCapacidade' => 'Erro de validação: Capacidade inválida.',
+            'validateCor' => 'Erro de validação: Cor inválida.',
+            'validateTipoCombus' => 'Erro de validação: Tipo de combustível inválido.',
+            'validatePotenciaMotor' => 'Erro de validação: Potência do motor inválida.',
+            'validateCpfProprietario' => 'Erro de validação: CPF do proprietário inválido.',
+        ];
+
+        foreach ($validations as $validation => $error) {
+            if (!$this->$validation()) {
+                $message = $error;
+                return false;
             }
-            return false;
-        }
-
-        if (empty($settings['marca'])) {
-            $message = 'Marca do carro não informada';
-            return false;
-        }
-
-        if (empty($settings['modelo'])) {
-            $message = 'Modelo do carro não informado';
-            return false;
-        }
-
-        if (empty($settings['ano_fabric'])) {
-            $message = 'Ano de Fabricação não informado';
-            return false;
-        } else if ($settings['ano_fabric'] < 1960) {
-            $message = 'Ano de Fabricação inválido';
-            return false;
-        } else if ($settings['ano_fabric'] > 2024) {
-            $message = 'Ano de Fabricação inválido';
-            return false;
-        }
-
-        if (empty($settings['capacidade_pass'])) {
-            $message = 'Capacidade de Passageiros não informada';
-            return false;
-        } else if ($settings['capacidade_pass'] < 5 || $settings['capacidade_pass'] > 8) {
-            $message = 'Capacidade de Passageiros inválida';
-            return false;
-        }
-
-        if (empty($settings['tipo_combust'])) {
-            $message = 'Tipo de combustivel não informado';
-            return false;
-        } else if (!in_array($settings['tipo_combust'], ['G', 'A', 'D', 'F'])) {
-            $message = 'Tipo de combustível inválido. Por favor, insira um tipo de combustível válido (G, A, D ou F).';
-            return false;
-        }
-
-        if (empty($settings['potencia_motor'])) {
-            $message = 'Potência do motor inválida';
-            return false;
-        } else if ($settings['capacidade_pass'] < 0) {
-            $message = 'Capacidade inválida';
-            return false;
-        }
-
-        if (empty($settings['veiculo_proprietarios__fk'])) {
-            $message = 'CPF do propritário não informado';
-            return false;
-        } else if (!preg_match("/^\d{11}$/", $settings['veiculo_proprietarios__fk'])) {
-            $message = 'CPF inválido. Deve conter 11 dígitos numéricos';
-            return false;
         }
 
         return true;

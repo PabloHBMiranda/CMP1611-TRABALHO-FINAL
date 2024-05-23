@@ -44,55 +44,46 @@
 require_once '../../model/CMP1611_Passageiro.php';
 
 // Verifica se o formulário foi submetido
-if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-	// Obtém os dados do formulário
-	$passageiroData = [
-		'cpf_passag'      => $_POST['cpf_passag'],
-		'nome_passag'     => $_POST['nome_passag'],
-		'endereco_passag' => $_POST['endereco_passag'],
-		'telefone_passag' => $_POST['telefone_passag'],
-		'email_passag'    => $_POST['email_passag'],
-		'sexo_passag'     => $_POST['sexo_passag'],
-		'cartao_cred'     => (int)$_POST['cartao_cred'],
-		'bandeira_cartao' => $_POST['bandeira_cartao'],
-		'cidade_orig'     => $_POST['cidade_orig']
-	];
-
-	$passageiro = new CMP1611_Passageiro(
-		$passageiroData['cpf_passag'],
-		$passageiroData['cartao_cred'],
-		$passageiroData['bandeira_cartao'],
-		$passageiroData['cidade_orig'],
-		$passageiroData['nome_passag'],
-		$passageiroData['endereco_passag'],
-		$passageiroData['telefone_passag'],
-		$passageiroData['email_passag'],
-		$passageiroData['sexo_passag'],
-	);
-
-    $pessoa_data = [
-        'cpf_pessoa' => $passageiroData['cpf_passag'],
-        'nome' => $passageiroData['nome_passag'],
-        'endereco' => $passageiroData['endereco_passag'],
-        'telefone' => $passageiroData['telefone_passag'],
-        'email' => $passageiroData['email_passag'],
-        'sexo' => $passageiroData['sexo_passag']
+    // Obtém os dados do formulário
+    $passageiroData = [
+        'cpf_passag' => $_POST['cpf_passag'],
+        'nome_passag' => $_POST['nome_passag'],
+        'endereco_passag' => $_POST['endereco_passag'],
+        'telefone_passag' => $_POST['telefone_passag'],
+        'email_passag' => $_POST['email_passag'],
+        'sexo_passag' => $_POST['sexo_passag'],
+        'cartao_cred' => (int)$_POST['cartao_cred'],
+        'bandeira_cartao' => $_POST['bandeira_cartao'],
+        'cidade_orig' => $_POST['cidade_orig']
     ];
 
-	$message = '';
+    $passageiro = new CMP1611_Passageiro(
+        $passageiroData['cpf_passag'],
+        $passageiroData['cartao_cred'],
+        $passageiroData['bandeira_cartao'],
+        $passageiroData['cidade_orig'],
+        $passageiroData['nome_passag'],
+        $passageiroData['endereco_passag'],
+        $passageiroData['telefone_passag'],
+        $passageiroData['email_passag'],
+        $passageiroData['sexo_passag'],
+    );
 
-	// Verifica se os dados do passageiro são válidos
-	if ( $passageiro->validate_settings( $message ) ) {
-		// Insere o passageiro no banco de dados
-		if ( $passageiro->insertPassageiro() && $passageiro->insertPessoa($pessoa_data) ){
+    $message = '';
+
+    // Verifica se os dados do passageiro são válidos
+    if ($passageiro->validate_settings($message)) {
+        // Insere o passageiro no banco de dados
+        if ($passageiro->insertPassageiro()) {
             echo "Passageiro {$passageiroData['nome_passag']} com CPF {$passageiroData['cpf_passag']} cadastrado com sucesso!";
-		} else {
+        } else {
             echo "Erro ao inserir passageiro!";
         }
-	} else {
-		echo $message;
-	}
+    } else {
+        echo $message;
+    }
 }
 
 ?>
