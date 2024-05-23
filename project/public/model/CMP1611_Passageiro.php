@@ -158,7 +158,7 @@ class CMP1611_Passageiro extends CMP1611_Pessoa
         return false;
     }
 
-    public function updatePassageiro(array $passageiroData, &$new_passageiro): ?bool
+    public function updatePassageiro(&$new_passageiro, array $passageiroData): ?bool
     {
 
         try {
