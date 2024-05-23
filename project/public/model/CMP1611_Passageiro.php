@@ -105,7 +105,7 @@ class CMP1611_Passageiro extends CMP1611_Pessoa
             }
         }
 
-        if(!$this->checkPassageiroExistence()){
+        if (!$this->checkPassageiroExistence()) {
             return false;
         }
 
@@ -158,14 +158,36 @@ class CMP1611_Passageiro extends CMP1611_Pessoa
         return false;
     }
 
-    public function updatePassageiro(array $passageiroData): ?bool
+    public function updatePassageiro(array $passageiroData, &$new_passageiro): ?bool
     {
 
-        if ($this->query->checkIfIdExists('passageiros', 'cpf_passag', $passageiroData['cpf_passag'])) {
-            return true;
-        }
+        try {
+            // Validar os dados do passageiro antes de fazer a atualização
+            $new_passageiro = new CMP1611_Passageiro(
+                $passageiroData['cpf_passag'],
+                $passageiroData['cartao_cred'],
+                $passageiroData['bandeira_cartao'],
+                $passageiroData['cidade_orig'],
+                $passageiroData['nome'],
+                $passageiroData['endereco'],
+                $passageiroData['telefone'],
+                $passageiroData['email'],
+                $passageiroData['sexo']
+            );
 
-        return $this->query->update('passageiros', 'cpf_passag', $passageiroData['cpf_passag'], $passageiroData);
+            $message = '';
+            if (!$new_passageiro->validate_settings($message)) {
+                echo $message;
+                return false;
+            }
+
+            // Realizar a atualização no banco de dados
+            return $this->query->update('passageiros', 'cpf_passag', $passageiroData['cpf_passag'], $passageiroData);
+        } catch (PDOException $e) {
+            // Lidar com possíveis erros de atualização
+            echo "Update error: " . $e->getMessage();
+            return false;
+        }
     }
 
     public function validate_settings(string &$message): bool
