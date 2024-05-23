@@ -4,7 +4,7 @@ require_once 'CMP1611_Query.php';
 
 class CMP1611_Pessoa
 {
-    protected int $cpf_pessoa;
+    protected int $cpf;
     protected string $nome;
     protected string $endereco;
     protected int $telefone;
@@ -14,15 +14,16 @@ class CMP1611_Pessoa
 
     public function
     __construct(
-        int    $cpf_pessoa = 0,
+        int    $cpf = 0,
         string $nome = '',
         string $endereco = '',
         int    $telefone = 0,
         string $sexo = '',
         string $email = ''
-    ) {
+    )
+    {
         $this->query = CMP1611_Query::getInstance();
-        $this->cpf_pessoa = $cpf_pessoa;
+        $this->cpf = $cpf;
         $this->nome = $nome;
         $this->endereco = $endereco;
         $this->telefone = $telefone;
@@ -32,14 +33,14 @@ class CMP1611_Pessoa
 
     // getters e setters para os atributos acima
 
-    public function getCpfPessoa(): int
+    public function getCpf(): int
     {
-        return $this->cpf_pessoa;
+        return $this->cpf;
     }
 
-    public function setCpfPessoa(int $cpf_pessoa): void
+    public function setCpfPessoa(int $cpf): void
     {
-        $this->cpf_pessoa = $cpf_pessoa;
+        $this->cpf = $cpf;
     }
 
     public function getNome(): string
@@ -92,72 +93,96 @@ class CMP1611_Pessoa
         $this->email = $email;
     }
 
-
-    public function insertPessoa(array $pessoaData)
+    public function insertPessoa()
     {
+
+        $pessoaData = [
+            'cpf_pessoa' => $this->cpf,
+            'nome' => $this->nome,
+            'email' => $this->email,
+            'sexo' => $this->sexo,
+            'endereco' => $this->endereco,
+            'telefone' => $this->telefone,
+        ];
+
         return $this->query->insert('pessoas', $pessoaData);
     }
 
-    public function selectPessoa(string $cpf_pessoa)
+    public function selectPessoa()
     {
-        if (empty($cpf_pessoa)) {
-            $cpf_pessoa = $this->getCpfPessoa();
-        }
+        $cpf = $this->getCpf();
 
-        return $this->query->select_from_id('pessoas', 'cpf_pessoa', $cpf_pessoa);
+        return $this->query->select_from_id('pessoas', 'cpf_pessoa', $cpf);
     }
 
-    public function checkPessoaExistence(string $cpf_pessoa = ''): bool
+    public function checkCpfPessoaExistence(): bool
     {
-        if (empty($cpf_pessoa)) {
-            $cpf_pessoa = $this->getCpfPessoa();
-        }
-
-        return $this->query->checkIfIdExists('pessoas', 'cpf_pessoa', $cpf_pessoa);
+        return $this->query->checkIfIdExists('pessoas', 'cpf_pessoa', $this->cpf);
     }
 
-    public static function validatePessoaData(&$message = '', $pessoaData): bool
+    public function validateCpfPessoa(): bool
     {
-        if (empty($pessoaData['cpf_pessoa'])) {
-            $message = 'CPF não informado';
-            return false;
-        } else if (!preg_match("/^\d{11}$/", $pessoaData['cpf_pessoa'])) {
-            $message = 'CPF inválido. Deve conter 11 dígitos numéricos';
+        // Verificar se o CPF é válido
+        if (!preg_match("/^[0-9]{11}$/", $this->cpf)) {
             return false;
         }
 
-        if (empty($pessoaData['nome'])) {
-            $message = 'Nome não informado';
+        if ($this->checkCpfPessoaExistence()) {
             return false;
         }
 
-        if (empty($pessoaData['endereco'])) {
-            $message = 'Endereço não informado';
+        return true;
+    }
+
+    public function validateNome(): bool
+    {
+        return !empty($this->nome);
+    }
+
+    public function validateEndereco(): bool
+    {
+        return !empty($this->endereco);
+    }
+
+    public function validateTelefone(): bool
+    {
+
+        if (!preg_match("/^[0-9]{11}$/", $this->cpf)) {
             return false;
         }
 
-        if (empty($pessoaData['telefone'])) {
-            $message = 'Telefone não informado';
-            return false;
-        } else if (!preg_match("/^\d+$/", $pessoaData['telefone'])) {
-            $message = 'Telefone inválido. Deve conter apenas dígitos numéricos';
-            return false;
-        }
+        return true;
+    }
 
-        if (empty($pessoaData['sexo'])) {
-            $message = 'Sexo não informado';
-            return false;
-        } else if (!in_array($pessoaData['sexo'], ['M', 'F'])) {
-            $message = 'Sexo inválido. Deve ser M (Masculino) ou F (Feminino)';
-            return false;
-        }
+    public function validateSexo(): bool
+    {
+        // Verificar se o sexo é válido
+        return in_array($this->sexo, ['M', 'F']);
+    }
 
-        if (empty($pessoaData['email'])) {
-            $message = 'Email não informado';
-            return false;
-        } else if (!filter_var($pessoaData['email'], FILTER_VALIDATE_EMAIL)) {
-            $message = 'Email inválido';
-            return false;
+    public function validateEmail(): bool
+    {
+        // Verificar se o email é válido
+        return filter_var($this->email, FILTER_VALIDATE_EMAIL);
+    }
+
+    public function validate_settings_pessoa(string &$message): bool
+    {
+        // Verificar se todos os dados são válidos
+        $validations = [
+            'validateCpfPessoa' => 'Erro de validação: CPF da Pessoa inválido ou já cadastrado.',
+            'validateNome' => 'Erro de validação: Nome inválido ou não cadastrado.',
+            'validateEndereco' => 'Erro de validação: Endereço inválido ou não cadastrado.',
+            'validateTelefone' => 'Erro de validação: Telefone inválido ou não cadastrado.',
+            'validateSexo' => 'Erro de validação: Sexo inválido ou não cadastrado.',
+            'validateEmail' => 'Erro de validação: Email inválido ou não cadastrado.',
+        ];
+
+        foreach ($validations as $validation => $error) {
+            if (!$this->$validation()) {
+                $message = $error;
+                return false;
+            }
         }
 
         return true;

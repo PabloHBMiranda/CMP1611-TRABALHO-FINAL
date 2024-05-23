@@ -55,38 +55,43 @@ require_once '../../model/CMP1611_Proprietario.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $proprietario = new CMP1611_Proprietario();
-    // Obtém os dados do formulário
     $proprietarioData = [
-        'cpf_prop' => $_POST['cpf'],
-        'cnh_prop' => $_POST['cnh'],
-        'banco_prop' => $_POST['bank'],
-        'agencia_prop' => $_POST['agency'],
-        'conta_prop' => $_POST['account']
-    ];
-
-    $pessoaData = [
-        'cpf_pessoa' => $_POST['cpf'],
+        'cpf_proprietario' => $_POST['cpf'],
+        'cnh' => $_POST['cnh'],
+        'banco_mot' => $_POST['bank'],
+        'conta_mot' => $_POST['account'],
+        'agencia_mot' => $_POST['agency'],
         'nome' => $_POST['name'],
         'email' => $_POST['email'],
         'sexo' => $_POST['sex'],
         'endereco' => $_POST['address'],
-        'telefone' => $_POST['phone'],
+        'telefone' => $_POST['phone']
     ];
 
+    $proprietario = new CMP1611_Proprietario(
+        $proprietarioData['cpf_proprietario'],
+        $proprietarioData['cnh'],
+        $proprietarioData['banco_mot'],
+        $proprietarioData['conta_mot'],
+        $proprietarioData['agencia_mot'],
+        $proprietarioData['nome'],
+        $proprietarioData['endereco'],
+        $proprietarioData['telefone'],
+        $proprietarioData['email'],
+        $proprietarioData['sexo'],
+    );
+
     $message = '';
-    if ($proprietario->validate_settings($message, $proprietarioData, $pessoaData)) {
-
-        if ($proprietario->insertProprietario($proprietarioData) && $proprietario->insertPessoa($pessoaData)) {
-            $message = "Proprietário {$proprietarioData['nome']} com CPF {$proprietarioData['cpf_prop']} cadastrado com sucesso!";
+    if ($proprietario->validate_settings($message)) {
+        if ($proprietario->insertProprietario()) {
+            $message = "Propietário {$proprietario->getNome()} com CPF {$proprietario->getCpf()} cadastrado com SUCESSO!";
         } else {
-            $message = "Falha ao inserir proprietário.<br>";
+            $message = "Falha ao inserir motorista.<br>";
         }
-
     }
 
     if ($message) {
-        header("Location: proprietario-views-cadastro.php?message=" . urlencode($message));
+        header("Location: proprietario-cadastro.php?message=" . urlencode($message));
         exit();
     }
 } ?>

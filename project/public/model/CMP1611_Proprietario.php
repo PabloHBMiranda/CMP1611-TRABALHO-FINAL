@@ -5,55 +5,45 @@ require_once 'CMP1611_Pessoa.php';
 
 class CMP1611_Proprietario extends CMP1611_Pessoa
 {
-    private int $cpf_prop;
     private string $cnh_prop;
     private int $conta_prop;
     private int $banco_prop;
     private int $agencia_prop;
 
-     /**
-      * @param int $cpf
-      * @param string $cnh
-      * @param int $conta_prop
-      * @param int $banco_prop
-      * @param int $agencia_prop
-      * @param int $telefone_prop
-      * @param string $nome_prop
-      * @param string $endereco_prop
-      * @param string $email
-      * @param string $sexo
-      */
+    /**
+     * @param int $cpf
+     * @param string $cnh_prop
+     * @param int $banco_prop
+     * @param int $conta_prop
+     * @param int $agencia_prop
+     * @param string $nome_prop
+     * @param string $endereco_prop
+     * @param int $telefone_prop
+     * @param string $email_prop
+     * @param string $sexo_prop
+     */
 
     public function __construct(
-        string $cnh = '',
-        int    $conta_prop = 0,
+        int    $cpf = 0,
+        string $cnh_prop = '',
         int    $banco_prop = 0,
+        int    $conta_prop = 0,
         int    $agencia_prop = 0,
-        int $cpf = 0,
-        int    $telefone_prop = 0,
         string $nome_prop = '',
         string $endereco_prop = '',
-        string $email = '',
-        string $sexo = ''
+        int    $telefone_prop = 0,
+        string $email_prop = '',
+        string $sexo_prop = ''
     )
     {
-        parent::__construct($cpf, $nome_prop, $endereco_prop, $telefone_prop, $email, $sexo);
+        parent::__construct($cpf, $nome_prop, $endereco_prop, $telefone_prop, $email_prop, $sexo_prop);
 
-        $this->cnh = $cnh;
-        $this->conta_prop = $conta_prop;
+        $this->cnh_prop = $cnh_prop;
         $this->banco_prop = $banco_prop;
+        $this->conta_prop = $conta_prop;
         $this->agencia_prop = $agencia_prop;
     }
 
-    public function getCpfProp(): int
-    {
-        return $this->cpf_prop;
-    }
-
-    public function setCpfProp(int $cpf_prop): void
-    {
-        $this->cpf_prop = $cpf_prop;
-    }
 
     public function getCnhProp(): string
     {
@@ -95,87 +85,100 @@ class CMP1611_Proprietario extends CMP1611_Pessoa
         $this->agencia_prop = $agencia_prop;
     }
 
-    public function checkProprietarioExistence( string $cnh_prop): bool
+    public function checkCpfProprietarioExistence(): bool
     {
-        if(empty($cnh_prop)){
-            $cnh_prop = $this->getCnhProp();
-        }
+        $cpf_prop = $this->cpf;
+
+        return $this->query->checkIfIdExists('proprietarios', 'cpf_prop', $cpf_prop);
+    }
+
+    public function checkCnhProprietarioExistence(): bool
+    {
+
+        $cnh_prop = $this->cnh_prop;
 
         return $this->query->checkIfIdExists('proprietarios', 'cnh_prop', $cnh_prop);
     }
 
-    public function insertProprietario(array $proprietarioData)
+    public function insertProprietario()
     {
+        $proprietarioData = [
+            'cpf_prop' => $this->cpf,
+            'cnh_prop' => $this->cnh_prop,
+            'banco_prop' => $this->banco_prop,
+            'agencia_prop' => $this->agencia_prop,
+            'conta_prop' => $this->conta_prop
+        ];
+
         return $this->query->insert('proprietarios', $proprietarioData);
     }
 
-    public function selectProprietario(string $cpf_proprietario)
+    public function validateCpfProprietario(): bool
     {
-        if (empty($cpf_proprietario)) {
-            $cpf_proprietario = $this->getCpfProp();
+        // Verificar se o CPF é válido
+        if (!preg_match("/^[0-9]{11}$/", $this->cpf)) {
+            return false;
         }
 
-        $pessoaData = $this->selectPessoa($cpf_proprietario);
-        unset($pessoaData['cpf_pessoa']);
+        // Verificar se o proprietário está cadastrado no sistema
+        if ($this->checkCpfProprietarioExistence()) {
+            return false;
+        }
 
-        return array_merge($this->query->select_from_id('proprietarios', 'cpf_prop', $cpf_proprietario), $pessoaData);
+        return true;
     }
 
-    public function validate_settings(&$message, $settings, $settings_pessoa): bool
+    public function validateCnhProp(): bool
     {
-        if (empty($settings['cpf_prop'])) {
-            $message = 'CPF não informado';
-            return false;
-        } else if (!preg_match("/^\d{11}$/", $settings['cpf_prop'])) {
-            $message = 'CPF inválido. Deve conter 11 dígitos numéricos';
+        // Verificar se a CNH é válida
+        if (!preg_match("/^\d{11}$/", $this->cnh_prop)) {
             return false;
         }
 
-        if (empty($settings['cnh_prop'])) {
-            $message = 'CNH não informada';
-            return false;
-        } else if (!preg_match("/^\d{11}$/", $settings['cnh_prop'])) {
-            $message = 'CNH inválida. Deve conter 11 dígitos numéricos';
+        if ($this->checkCnhProprietarioExistence()) {
             return false;
         }
 
-        if (empty($settings['banco_prop'])) {
-            $message = 'Banco não informado';
-            return false;
-        } else if (!is_numeric($settings['banco_prop'])) {
-            $message = 'Um valor númerico deve ser informado.';
-            return false;
+        return true;
+    }
+
+    public function validateBancoProp(): bool
+    {
+        // Verificar se o banco é válido
+        return !empty($this->banco_prop);
+    }
+
+    public function validateAgenciaProp(): bool
+    {
+        // Verificar se a agência é válida
+        return !empty($this->agencia_prop);
+    }
+
+    public function validateContaProp(): bool
+    {
+        // Verificar se a conta é válida
+        return !empty($this->conta_prop);
+    }
+
+    public function validate_settings(string &$message): bool
+    {
+        // Verificar se todos os dados são válidos
+        $validations = [
+            'validateCpfProprietario' => 'Erro de validação: CPF do Proprietário inválido ou já cadastrado.',
+            'validateCnhProp' => 'Erro de validação: CNH inválida ou já cadastrada.',
+            'validateBancoProp' => 'Erro de validação: Banco inválido ou não cadastrado.',
+            'validateAgenciaProp' => 'Erro de validação: Agência inválida ou não cadastrada.',
+            'validateContaProp' => 'Erro de validação: Conta inválida ou não cadastrada.',
+        ];
+
+        foreach ($validations as $validation => $error) {
+            if (!$this->$validation()) {
+                $message = $error;
+                return false;
+            }
         }
 
-        if (empty($settings['agencia_prop'])) {
-            $message = 'Agência não informada';
-            return false;
-        } else if (!preg_match("/^\d+$/", $settings['agencia_prop'])) {
-            $message = 'Agência inválida. Deve conter apenas dígitos numéricos';
-            return false;
-        }
-
-        if (empty($settings['conta_prop'])) {
-            $message = 'Conta não informada';
-            return false;
-        } else if (!preg_match("/^\d+$/", $settings['conta_prop'])) {
-            $message = 'Conta inválida. Deve conter apenas dígitos numéricos';
-            return false;
-        }
-
-        if (!CMP1611_Pessoa::validatePessoaData($message, $settings_pessoa)) {
-            return false;
-        }
-
-        if($this->checkPessoaExistence($settings_pessoa['cpf_pessoa'])){
-            $message = 'Pessoa já cadastrada';
-            return false;
-        }
-
-        if($this->checkProprietarioExistence($settings['cnh_prop'])){
-            $message = 'Proprietário já cadastrada';
-            return false;
-        }
+        $this->validate_settings_pessoa($message);
 
         return true;
     }

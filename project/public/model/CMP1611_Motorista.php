@@ -5,40 +5,40 @@ require_once 'CMP1611_Pessoa.php';
 
 class CMP1611_Motorista extends CMP1611_Pessoa
 {
-    private string $cnh;
+    private string $cnh_mot;
     private int $conta_mot;
     private int $banco_mot;
     private int $agencia_mot;
 
     /**
      * @param int $cpf
-     * @param string $cnh
+     * @param string $cnh_mot
      * @param int $conta_mot
      * @param int $banco_mot
      * @param int $agencia_mot
      * @param int $telefone_mot
      * @param string $nome_mot
      * @param string $endereco_mot
-     * @param string $email
-     * @param string $sexo
+     * @param string $email_mot
+     * @param string $sexo_mot
      */
     public
     function __construct(
-        string $cnh = '',
-        int    $conta_mot = 0,
+        int    $cpf = 0,
+        string $cnh_mot = '',
         int    $banco_mot = 0,
+        int    $conta_mot = 0,
         int    $agencia_mot = 0,
-        int $cpf = 0,
         string $nome_mot = '',
         string $endereco_mot = '',
         int    $telefone_mot = 0,
-        string $email = '',
-        string $sexo = ''
+        string $email_mot = '',
+        string $sexo_mot = ''
     )
     {
-        parent::__construct($cpf, $nome_mot, $endereco_mot, $telefone_mot, $email, $sexo);
+        parent::__construct($cpf, $nome_mot, $endereco_mot, $telefone_mot, $sexo_mot, $email_mot);
 
-        $this->cnh = $cnh;
+        $this->cnh_mot = $cnh_mot;
         $this->conta_mot = $conta_mot;
         $this->banco_mot = $banco_mot;
         $this->agencia_mot = $agencia_mot;
@@ -55,14 +55,14 @@ class CMP1611_Motorista extends CMP1611_Pessoa
         $this->query = $query;
     }
 
-    public function getCnh(): string
+    public function getCnhMot(): string
     {
-        return $this->cnh;
+        return $this->cnh_mot;
     }
 
-    public function setCnh(string $cnh): void
+    public function setCnhMot(string $cnh_mot): void
     {
-        $this->cnh = $cnh;
+        $this->cnh_mot = $cnh_mot;
     }
 
     public function getContaMot(): int
@@ -95,92 +95,103 @@ class CMP1611_Motorista extends CMP1611_Pessoa
         $this->agencia_mot = $agencia_mot;
     }
 
-    public function checkMotoristaExistence(string $cnh_mot): bool
+    //Verifica se o CPF do Motorista existe
+    public function checkCpfMotoristaExistence(): bool
     {
-        if(empty($cnh_mot)){
-            $cnh_mot = $this->getCnh();
-        }
+        $cpf_mot = $this->cpf;
+
+        return $this->query->checkIfIdExists('motoristas', 'cpf_motorista', $cpf_mot);
+    }
+
+    //Verifica se a CNH existe
+    public function checkCnhExistence(): bool
+    {
+        $cnh_mot = $this->cnh_mot;
 
         return $this->query->checkIfIdExists('motoristas', 'cnh', $cnh_mot);
     }
 
-    public function insertMotorista(array $motoristaData): ?bool
+    public function insertMotorista(): ?bool
     {
-        return $this->query->insert('motoristas', $motoristaData);
+
+        $motoristaData = [
+            'cpf_motorista' => $this->cpf,
+            'cnh' => $this->cnh_mot,
+            'banco_mot' => $this->banco_mot,
+            'agencia_mot' => $this->agencia_mot,
+            'conta_mot' => $this->conta_mot
+        ];
+
+        if ($this->insertPessoa()) {
+            if ($this->query->insert('motoristas', $motoristaData)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public function selectMotorista(string $cpf_mot)
+    public function validateCpfMotorista(): bool
     {
-        if (empty($cpf_mot)) {
-            $cpf_mot = $this->getCpfPessoa();
+        // Verificar se o CPF é válido
+        if (!preg_match("/^[0-9]{11}$/", $this->cpf)) {
+            return false;
         }
 
-        $pessoaData = $this->selectPessoa($cpf_mot);
-        unset($pessoaData['cpf_pessoa']);
+        if ($this->checkCpfMotoristaExistence()) {
+            return false;
+        }
 
-        return array_merge($this->query->select_from_id('motoristas', 'cpf_motorista', $cpf_mot), $pessoaData);
+        return true;
     }
 
-    public function updateMotorista(array $motoristaData): ?bool
+    public function validateCnh(): bool
     {
-        return $this->query->insert('motoristas', $motoristaData);
+        // Verificar se o CPF é válido
+        if (!preg_match("/^\d{11}$/", $this->cnh_mot)) {
+            return false;
+        }
+
+        if ($this->checkCnhExistence()) {
+            return false;
+        }
+
+        return true;
     }
 
-    public function validate_settings(&$message, $settings, $settings_pessoa): bool
+    public function validateBancoMot(): bool
     {
-        if (empty($settings['cpf_motorista'])) {
-            $message = 'CPF não informado';
-            return false;
-        } else if (!preg_match("/^\d{11}$/", $settings['cpf_motorista'])) {
-            $message = 'CPF inválido. Deve conter 11 dígitos numéricos';
-            return false;
+        return !empty($this->banco_mot);
+    }
+
+    public function validateAgenciaMot(): bool
+    {
+        return !empty($this->agencia_mot);
+    }
+
+    public function validateContaMot(): bool
+    {
+        return !empty($this->conta_mot);
+    }
+
+    public function validate_settings(string &$message): bool
+    {
+        // Verificar se todos os dados são válidos
+        $validations = [
+            'validateCpfMotorista' => 'Erro de validação: CPF do Motorista inválido ou já cadastrado.',
+            'validateCnh' => 'Erro de validação: CNH do Motorista inválida ou já cadastrada.',
+            'validateBancoMot' => 'Erro de validação: Banco inválido ou não cadastrado.',
+            'validateAgenciaMot' => 'Erro de validação: Agência inválida ou não cadastrada.',
+            'validateContaMot' => 'Erro de validação: Conta inválida ou não cadastrada.',
+        ];
+
+        foreach ($validations as $validation => $error) {
+            if (!$this->$validation()) {
+                $message = $error;
+                return false;
+            }
         }
 
-        if (empty($settings['cnh'])) {
-            $message = 'CNH não informada';
-            return false;
-        } else if (!preg_match("/^\d{11}$/", $settings['cnh'])) {
-            $message = 'CNH inválida. Deve conter 11 dígitos numéricos';
-            return false;
-        }
-
-        if (empty($settings['banco_mot'])) {
-            $message = 'Banco não informado';
-            return false;
-        } else if (!is_numeric($settings['banco_mot'])) {
-            $message = 'Um valor númerico deve ser informado.';
-            return false;
-        }
-
-        if (empty($settings['agencia_mot'])) {
-            $message = 'Agência não informada';
-            return false;
-        } else if (!preg_match("/^\d+$/", $settings['agencia_mot'])) {
-            $message = 'Agência inválida. Deve conter apenas dígitos numéricos';
-            return false;
-        }
-
-        if (empty($settings['conta_mot'])) {
-            $message = 'Conta não informada';
-            return false;
-        } else if (!preg_match("/^\d+$/", $settings['conta_mot'])) {
-            $message = 'Conta inválida. Deve conter apenas dígitos numéricos';
-            return false;
-        }
-
-        if (!CMP1611_Pessoa::validatePessoaData($message, $settings_pessoa)) {
-            return false;
-        }
-
-        if($this->checkPessoaExistence($settings['cpf_motorista'])){
-            $message = 'Pessoa já cadastrado';
-            return false;
-        }
-
-        if($this->checkMotoristaExistence( $settings['cnh'])){
-            $message = 'Motorista com CNH já cadastrada';
-            return false;
-        }
+        $this->validate_settings_pessoa($message);
 
         return true;
     }

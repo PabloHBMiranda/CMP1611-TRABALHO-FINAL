@@ -15,7 +15,7 @@ if (isset($_GET['message'])) {
 }
 ?>
 
-<form action="motorista-veiculo.php" method="post">
+<form action="motorista-veiculo-cadastro.php" method="post">
     <label for="cpf">CPF:</label>
     <input type="text" id="cpf" name="cpf" required><br><br>
 
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if ($message) {
-        header("Location: motorista-veiculo.php?message=" . urlencode($message));
+        header("Location: motorista-veiculo-cadastro.php?message=" . urlencode($message));
         exit();
     }
 } ?>
