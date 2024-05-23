@@ -5,23 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e3a1a75-94e2-4e7b-b72c-d54ac9fdc4a3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/project/public/views/views-updates/motorista-update.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/public/views/cadastro/motorista-cadastro.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/views/views-cadastro/motorista-cadastro.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/public/views/cadastro/proprietario-cadastro.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/views/views-cadastro/proprietario-cadastro.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/public/views/cadastro/veiculo-cadastro.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/views/views-cadastro/veiculo-cadastro.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/public/views/cadastro/viagem-cadastro.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/views/views-cadastro/viagem-cadastro.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/public/model/CMP1611_Passageiro.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/public/views/views-cadastro/passageiro-cadastro.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0be6f4b8-a99e-4fc9-bf4b-f303f3b88110.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0be6f4b8-a99e-4fc9-bf4b-f303f3b88110.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0be6f4b8-a99e-4fc9-bf4b-f303f3b88110/storage_v2/_src_/database/cmp1611_pablo_vinicius_tales_renato.4cMRng/schema/cmp1611_trabalho_final.PGOD5A.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0be6f4b8-a99e-4fc9-bf4b-f303f3b88110/storage_v2/_src_/database/cmp1611_pablo_vinicius_tales_renato.4cMRng/schema/cmp1611_trabalho_final.PGOD5A.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/project/composer.json</pharConfigPath>
     <execution />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration">
     <include_path>
@@ -101,9 +105,11 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/xampp/htdocs/CMP1611-TRABALHO-FINAL/project/public/views/views-updates",
+    "last_opened_file_path": "C:/xampp/htdocs/CMP1611-TRABALHO-FINAL",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -149,6 +155,7 @@
       <workItem from="1716335849707" duration="6474000" />
       <workItem from="1716426577444" duration="1356000" />
       <workItem from="1716428056780" duration="3038000" />
+      <workItem from="1716431650624" duration="3144000" />
     </task>
     <servers />
   </component>
