@@ -197,4 +197,16 @@ class CMP1611_Query{
             }
         }
     }
+
+	public function select_all($table): false|array {
+		$sql = "SELECT * FROM $this->schema.$table";
+		$stmt = $this->conn->query($sql);
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	public function select_all_motoristas(): false|array {
+		$sql = "SELECT * FROM $this->schema.motoristas m JOIN $this->schema.pessoas p ON m.cpf_motorista = p.cpf_pessoa";
+		$stmt = $this->conn->query($sql);
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
 }
