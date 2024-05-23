@@ -28,10 +28,10 @@ class CMP1611_Motorista extends CMP1611_Pessoa
         int    $conta_mot = 0,
         int    $banco_mot = 0,
         int    $agencia_mot = 0,
-        int    $telefone_mot = 0,
         int $cpf = 0,
         string $nome_mot = '',
         string $endereco_mot = '',
+        int    $telefone_mot = 0,
         string $email = '',
         string $sexo = ''
     )
@@ -119,6 +119,11 @@ class CMP1611_Motorista extends CMP1611_Pessoa
         unset($pessoaData['cpf_pessoa']);
 
         return array_merge($this->query->select_from_id('motoristas', 'cpf_motorista', $cpf_mot), $pessoaData);
+    }
+
+    public function updateMotorista(array $motoristaData): ?bool
+    {
+        return $this->query->insert('motoristas', $motoristaData);
     }
 
     public function validate_settings(&$message, $settings, $settings_pessoa): bool

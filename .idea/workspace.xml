@@ -5,11 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e3a1a75-94e2-4e7b-b72c-d54ac9fdc4a3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/public/model/CMP1611_Motorista.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/model/CMP1611_Motorista.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/public/model/CMP1611_Proprietario.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/model/CMP1611_Proprietario.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/public/views/cadastro/motorista-cadastro.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/views/cadastro/motorista-cadastro.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/public/views/cadastro/proprietario-cadastro.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/views/cadastro/proprietario-cadastro.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/public/views/views-updates/motorista-update.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/public/views/cadastro/motorista-cadastro.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/views/views-cadastro/motorista-cadastro.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/public/views/cadastro/proprietario-cadastro.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/views/views-cadastro/proprietario-cadastro.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/public/views/cadastro/veiculo-cadastro.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/views/views-cadastro/veiculo-cadastro.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/public/views/cadastro/viagem-cadastro.php" beforeDir="false" afterPath="$PROJECT_DIR$/project/public/views/views-cadastro/viagem-cadastro.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,25 +99,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/xampp/htdocs/CMP1611-TRABALHO-FINAL/cmp1611_pablo_vinicius_tales_renato.sql&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/xampp/htdocs/CMP1611-TRABALHO-FINAL/project/public/views/views-updates",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\xampp\htdocs\CMP1611-TRABALHO-FINAL" />
@@ -148,7 +148,7 @@
       <workItem from="1716256628085" duration="4855000" />
       <workItem from="1716335849707" duration="6474000" />
       <workItem from="1716426577444" duration="1356000" />
-      <workItem from="1716428056780" duration="2598000" />
+      <workItem from="1716428056780" duration="3038000" />
     </task>
     <servers />
   </component>

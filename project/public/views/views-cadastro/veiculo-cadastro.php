@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if ($message) {
-        header("Location: veiculo-cadastro.php?message=" . urlencode($message));
+        header("Location: veiculo-views-cadastro.php?message=" . urlencode($message));
         exit();
     }
 }

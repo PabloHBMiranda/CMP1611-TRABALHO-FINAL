@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proprietário Cadastro</title>
+    <title>Atualizar Motorista</title>
 </head>
 <body>
-<h1>Cadastro de Proprietário</h1>
+<h1>Atualizar Motorist</h1>
 
 <?php
 // Exibir mensagem de sucesso ou erro
@@ -15,7 +15,7 @@ if (isset($_GET['message'])) {
 }
 ?>
 
-<form action="proprietario-cadastro.php" method="post">
+<form action="motorista-update.php" method="post">
     <label for="cpf">CPF:</label>
     <input type="text" id="cpf" name="cpf" required><br><br>
 
@@ -46,23 +46,22 @@ if (isset($_GET['message'])) {
 
     <label for="account">Conta:</label>
     <input type="text" id="account" name="account" required><br><br>
-    <input type="submit" value="Cadastrar Proprietário">
+
+    <input type="submit" value="Atualizar Motorista">
 </form>
 
 <?php
 
-require_once '../../model/CMP1611_Proprietario.php';
+require_once '../../model/CMP1611_Motorista.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $proprietario = new CMP1611_Proprietario();
-    // Obtém os dados do formulário
-    $proprietarioData = [
-        'cpf_prop' => $_POST['cpf'],
-        'cnh_prop' => $_POST['cnh'],
-        'banco_prop' => $_POST['bank'],
-        'agencia_prop' => $_POST['agency'],
-        'conta_prop' => $_POST['account']
+    $motoristaData = [
+        'cpf_motorista' => $_POST['cpf'],
+        'cnh' => $_POST['cnh'],
+        'banco_mot' => $_POST['bank'],
+        'agencia_mot' => $_POST['agency'],
+        'conta_mot' => $_POST['account']
     ];
 
     $pessoaData = [
@@ -74,19 +73,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'telefone' => $_POST['phone'],
     ];
 
+    $motorista = new CMP1611_Motorista(
+        'cnh',
+        'cpf_motorista',
+        'banco_mot',
+        'agencia_mot',
+        'cpf_motorista',
+        'nome',
+        'endereco',
+        'telefone',
+        'email',
+        'sexo');
+
     $message = '';
-    if ($proprietario->validate_settings($message, $proprietarioData, $pessoaData)) {
-
-        if ($proprietario->insertProprietario($proprietarioData) && $proprietario->insertPessoa($pessoaData)) {
-            $message = "Proprietário {$proprietarioData['nome']} com CPF {$proprietarioData['cpf_prop']} cadastrado com sucesso!";
+    if ($motorista->validate_settings($message, $motoristaData, $pessoaData)) {
+        if ($motorista->insertMotorista($motoristaData) && $motorista->insertPessoa($pessoaData)) {
+            $message = "Motorista {$motoristaData['nome']} com CPF {$motoristaData['cpf_motorista']} cadastrado com sucesso!";
         } else {
-            $message = "Falha ao inserir proprietário.<br>";
+            $message = "Falha ao inserir motorista.<br>";
         }
-
     }
 
     if ($message) {
-        header("Location: proprietario-cadastro.php?message=" . urlencode($message));
+        header("Location: motorista-views-cadastro.php?message=" . urlencode($message));
         exit();
     }
 } ?>
