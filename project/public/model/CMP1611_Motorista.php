@@ -11,7 +11,7 @@ class CMP1611_Motorista extends CMP1611_Pessoa
     private int $agencia_mot;
 
     /**
-     * @param int $cpf_mot
+     * @param int $cpf
      * @param string $cnh
      * @param int $conta_mot
      * @param int $banco_mot
@@ -95,14 +95,18 @@ class CMP1611_Motorista extends CMP1611_Pessoa
         $this->agencia_mot = $agencia_mot;
     }
 
-    public function checkMotoristaExistence(string $cpf_mot): bool
+    public function checkMotoristaExistence(string $cpf_mot, string $cnh_mot): bool
     {
 
         if (empty($cpf_mot)) {
             $cpf_mot = $this->getCpfPessoa();
         }
 
-        return $this->query->checkIfIdExists('motoristas', 'cpf_motorista', $cpf_mot);
+        if(empty($cnh_mot)){
+            $cnh_mot = $this->getCnh();
+        }
+
+        return $this->query->checkIfIdExists('motoristas', 'cpf_motorista', $cpf_mot) && $this->query->checkIfIdExists('motoristas', 'cnh', $cnh_mot);
     }
 
     public function insertMotorista(array $motoristaData): ?bool
@@ -122,7 +126,7 @@ class CMP1611_Motorista extends CMP1611_Pessoa
         return array_merge($this->query->select_from_id('motoristas', 'cpf_motorista', $cpf_mot), $pessoaData);
     }
 
-    public static function validate_settings(&$message = '', $settings, $settings_pessoa): bool
+    public static function validate_settings(&$message, $settings, $settings_pessoa): bool
     {
         if (empty($settings['cpf_motorista'])) {
             $message = 'CPF não informado';

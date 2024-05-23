@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Motorista</title>
+    <title>Proprietário Cadastro</title>
 </head>
 <body>
-<h1>Cadastro de Motorista</h1>
+<h1>Cadastro de Proprietário</h1>
 
 <?php
 // Exibir mensagem de sucesso ou erro
@@ -15,7 +15,7 @@ if (isset($_GET['message'])) {
 }
 ?>
 
-<form action="motorista-cadastro.php" method="post">
+<form action="proprietario-cadastro.php" method="post">
     <label for="cpf">CPF:</label>
     <input type="text" id="cpf" name="cpf" required><br><br>
 
@@ -46,22 +46,21 @@ if (isset($_GET['message'])) {
 
     <label for="account">Conta:</label>
     <input type="text" id="account" name="account" required><br><br>
-
-    <input type="submit" value="Cadastrar Motorista">
+    <input type="submit" value="Cadastrar Proprietário">
 </form>
 
 <?php
 
-require_once '../../model/CMP1611_Motorista.php';
+require_once '../../model/CMP1611_Proprietario.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Obtém os dados do formulário
-    $motoristaData = [
-        'cpf_motorista' => $_POST['cpf'],
-        'cnh' => $_POST['cnh'],
-        'banco_mot' => $_POST['bank'],
-        'agencia_mot' => $_POST['agency'],
-        'conta_mot' => $_POST['account']
+    $proprietarioData = [
+        'cpf_prop' => $_POST['cpf'],
+        'cnh_prop' => $_POST['cnh'],
+        'banco_prop' => $_POST['bank'],
+        'agencia_prop' => $_POST['agency'],
+        'conta_prop' => $_POST['account']
     ];
 
     $pessoaData = [
@@ -74,24 +73,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ];
 
     $message = '';
-    if (CMP1611_Motorista::validate_settings($message, $motoristaData, $pessoaData)) {
+    if (CMP1611_Proprietario::validate_settings($message, $proprietarioData, $pessoaData)) {
 
-        $motorista = new CMP1611_Motorista();
+        $proprietario = new CMP1611_Proprietario();
 
-        if (!$motorista->checkMotoristaExistence($motoristaData['cpf_motorista'], $motoristaData['cnh'])
-            && !$motorista->checkPessoaExistence($pessoaData['cpf_pessoa'])) {
-            if ($motorista->insertMotorista($motoristaData) && $motorista->insertPessoa($pessoaData)) {
-                $message = "Motorista {$motoristaData['nome']} com CPF {$motoristaData['cpf_motorista']} cadastrado com sucesso!";
+        if (!$proprietario->checkProprietarioExistence($proprietarioData['cpf_prop'], $proprietarioData['cnh_prop'])
+            && !$proprietario->checkPessoaExistence($pessoaData['cpf_pessoa'])) {
+            if ($proprietario->insertProprietario($proprietarioData) && $proprietario->insertPessoa($pessoaData)) {
+                $message = "Proprietário {$proprietarioData['nome']} com CPF {$proprietarioData['cpf_prop']} cadastrado com sucesso!";
             } else {
-                $message = "Falha ao inserir motorista.<br>";
+                $message = "Falha ao inserir proprietário.<br>";
             }
         } else {
-            $message = "Motorista já cadastrado!";
+            $message = "Proprietário já cadastrado!";
         }
     }
 
     if ($message) {
-        header("Location: motorista-cadastro.php?message=" . urlencode($message));
+        header("Location: proprietario-cadastro.php?message=" . urlencode($message));
         exit();
     }
 } ?>
